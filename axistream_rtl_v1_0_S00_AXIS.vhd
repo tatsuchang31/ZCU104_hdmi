@@ -87,7 +87,7 @@ architecture arch_imp of axistream_rtl_v1_0_S00_AXIS is
     signal RW_A : std_logic_vector(0 downto 0) := (others=>'0');
     signal RW_B : std_logic_vector(0 downto 0) := (others=>'0');
     
-    --À•WƒJƒEƒ“ƒg
+    --åº§æ¨™ã‚«ã‚¦ãƒ³ãƒˆ
     type RAM_STATE is(IDLE, DATA_IN, DATA_OUT);
     signal RAM_Q: RAM_STATE:= IDLE; 
     signal count_x : unsigned(12-1 downto 0) := (others=>'0');
@@ -152,7 +152,7 @@ begin
    probe1 <= std_logic_vector(count_y);
    probe2 <= "1" when(RAM_Q=DATA_IN) else "0";
    probe3 <= std_logic_vector(address_A);
-   probe4 <="1" when(count_x>=1792/2 and count_x<2048/2 and count_y>=952/2 and count_y<1208/2 and S_AXIS_TVALID = '1' and RAM_Q=DATA_IN) else "0";
+   probe4 <="1" when(count_x>=1792/2 and count_x<2048/2 and count_y>=952 and count_y<1208 and S_AXIS_TVALID = '1' and RAM_Q=DATA_IN) else "0";
    probe5 <= "1" when(S_AXIS_TVALID='1') else "0";
    probe6 <= "1" when(S_AXIS_TUSER="1") else "0";
    probe7 <= "1" when(S_AXIS_TLAST='1') else "0";
@@ -163,14 +163,14 @@ begin
    probe12 <= "1" when(RAM_Q=DATA_OUT) else "0";
    probe13  <= std_logic_vector(counter);
    
-	--ready‚ª—§‚Á‚Ä‚¢‚½‚çA‚¢‚Â‚Å‚àƒEƒFƒ‹ƒJƒ€‚æ‚Á‚ÄŠ´‚¶
+	--readyãŒç«‹ã£ã¦ã„ãŸã‚‰ã€ã„ã¤ã§ã‚‚ã‚¦ã‚§ãƒ«ã‚«ãƒ ã‚ˆã£ã¦æ„Ÿã˜
     S_AXIS_TREADY <= '1' when (RAM_Q = DATA_IN or RAM_Q = IDLE) else '0';
 	
 	-- Add user logic here
 	--input
 	--RAM
-	RW_A <= "1" when(count_x>=1792/2 and count_x<2048/2 and count_y>=952/2 and count_y<1208/2 and S_AXIS_TVALID = '1' and RAM_Q=DATA_IN) else "0";
-	wren <= '1' when(count_x>=1792/2 and count_x<2048/2 and count_y>=952/2 and count_y<1208/2 and S_AXIS_TVALID = '1' and RAM_Q=DATA_IN) else '0';
+	RW_A <= "1" when(count_x>=1792/2 and count_x<2048/2 and count_y>=952 and count_y<1208 and S_AXIS_TVALID = '1' and RAM_Q=DATA_IN) else "0";
+	wren <= '1' when(count_x>=1792/2 and count_x<2048/2 and count_y>=952 and count_y<1208 and S_AXIS_TVALID = '1' and RAM_Q=DATA_IN) else '0';
 	addressRAM_A <= std_logic_vector(address_A);
 	inputRAM_A <= S_AXIS_TDATA(47 downto 0);
 	
@@ -196,7 +196,7 @@ begin
 	M_AXIS_TLAST <= '1' when(count_x=H_POS-1 and RAM_Q=DATA_OUT) else '0';
 	m_last <=  '1' when(count_x=H_POS-1 and RAM_Q=DATA_OUT) else '0';
 	M_AXIS_TUSER <= "1" when(count_y=0 and count_x=0 and RAM_Q=DATA_OUT) else "0";
-	M_AXIS_TDATA <= outputRAM_A when(count_x>=1792/2 and count_x<2048/2 and count_y>=952/2 and count_y<1208/2 and RAM_Q=DATA_OUT)
+	M_AXIS_TDATA <= outputRAM_A when(count_x>=1792/2 and count_x<2048/2 and count_y>=952 and count_y<1208 and RAM_Q=DATA_OUT)
 	                else (others=>'1');
 	M_AXIS_TKEEP <= "111111";
 	M_AXIS_TDEST <="0";
@@ -233,7 +233,7 @@ begin
 	      elsif(RAM_Q=DATA_OUT)then
 	        if(count_x=H_POS-1 and count_y=V_POS-1 and M_AXIS_TREADY='1' and m_valid = '1')then
 	          address_A <= (others=>'0');
-	        elsif(count_x>=1792/2-2 and count_x<2048/2-2 and count_y>=952/2 and count_y<1208/2 and M_AXIS_TREADY='1' and m_valid = '1')then  --output delay(x,-2)
+	        elsif(count_x>=1792/2-2 and count_x<2048/2-2 and count_y>=952 and count_y<1208 and M_AXIS_TREADY='1' and m_valid = '1')then  --output delay(x,-2)
 	           address_A <= address_A + 1;
 	        end if;
 	      end if;
